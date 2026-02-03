@@ -3,153 +3,234 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>BPS Tabalong - Pengawasan</title>
+    <title>BPS Tabalong - Survei Harga</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <link rel="icon" type="image/png" href="https://www.bps.go.id/assets/logo-bps.png">
-    <link rel="apple-touch-icon" href="https://www.bps.go.id/assets/logo-bps.png">
+    <style>
+        table { border-collapse: collapse; width: 100%; }
+        th, td { border: 1px solid #e5e7eb; padding: 8px; text-align: center; font-size: 10px; }
+        th { background-color: #f9fafb; font-weight: 900; }
+        .radio-custom { width: 18px; height: 18px; cursor: pointer; }
+    </style>
 </head>
 <body class="bg-gray-100 font-sans">
 
     <div class="bg-[#0066b2] text-white p-4 shadow-lg flex items-center justify-center space-x-4 border-b-4 border-[#ffc107]">
         <img src="https://www.bps.go.id/_next/image?url=%2Fassets%2Flogo-bps.png&w=1080&q=75" alt="Logo BPS" class="h-12 w-auto">
         <div class="text-left">
-            <h1 class="text-xl font-bold leading-tight">PENGAWASAN SURVEY HARGA KONSUMEN BPS</h1>
-            <p class="text-xs font-bold tracking-widest uppercase opacity-90">Kab. Tabalong</p>
+            <h1 class="text-xl font-bold leading-tight uppercase">Survei Harga</h1>
+            <p class="text-xs font-bold tracking-widest uppercase opacity-90 text-yellow-300">Kab. Tabalong</p>
         </div>
     </div>
 
-    <div class="p-5 max-w-md mx-auto mb-10">
-        <div id="preview-container" class="w-full h-72 bg-white rounded-2xl mb-6 flex items-center justify-center border-4 border-dashed border-gray-300 overflow-hidden shadow-inner relative">
-            <img id="image-preview" class="hidden w-full h-full object-cover">
-            <div id="placeholder-text" class="text-center p-4">
-                <span class="text-5xl block mb-2">📸</span>
-                <span class="text-gray-400 font-bold uppercase text-xs">Belum Ada Foto</span>
-            </div>
-        </div>
-
-        <div class="space-y-6">
-            <div class="grid grid-cols-2 gap-4">
-                <button onclick="document.getElementById('camera-input').click()" class="bg-[#0066b2] text-white font-black py-4 rounded-2xl shadow-[0_4px_0_rgb(0,70,130)] active:shadow-none active:translate-y-1 transition-all text-lg flex flex-col items-center">
-                    <span class="text-2xl mb-1">📸</span> KAMERA
-                </button>
-                <input type="file" id="camera-input" accept="image/*" capture="camera" class="hidden" onchange="previewImage(event)">
-
-                <button onclick="document.getElementById('file-input').click()" class="bg-[#ffc107] text-black font-black py-4 rounded-2xl shadow-[0_4px_0_rgb(214,158,0)] active:shadow-none active:translate-y-1 transition-all text-lg flex flex-col items-center">
-                    <span class="text-2xl mb-1">🖼️</span> GALERI
-                </button>
-                <input type="file" id="file-input" accept="image/*" class="hidden" onchange="previewImage(event)">
+    <div class="p-4 max-w-md mx-auto mb-10">
+        <div class="space-y-4 bg-white p-5 rounded-3xl shadow-md border border-gray-200">
+            
+            <div class="grid grid-cols-2 gap-3">
+                <div>
+                    <label class="block text-gray-700 font-black mb-1 text-[10px] uppercase">Petugas :</label>
+                    <input type="text" id="nama" class="w-full p-3 border-2 border-gray-100 rounded-xl focus:border-[#0066b2] outline-none text-sm" placeholder="Nama">
+                </div>
+                <div>
+                    <label class="block text-gray-700 font-black mb-1 text-[10px] uppercase">Kegiatan :</label>
+                    <input type="text" id="kegiatan" class="w-full p-3 border-2 border-gray-100 rounded-xl focus:border-[#0066b2] outline-none text-sm" placeholder="HK 1.1 Pasar">
+                </div>
             </div>
 
             <div>
-                <label class="block text-gray-700 font-black mb-2 text-sm uppercase tracking-wide">Detail Laporan :</label>
-                <textarea id="deskripsi" rows="4" class="w-full p-4 border-2 border-gray-200 rounded-xl shadow-sm focus:border-[#0066b2] outline-none text-lg transition-all" placeholder="Contoh: Ikan Gabus ukuran sedang..."></textarea>
+                <label class="block text-gray-700 font-black mb-1 text-[10px] uppercase text-blue-700">Pilih Komoditas :</label>
+                <select id="komoditas-select" onchange="toggleLainnya()" class="w-full p-3 border-2 border-blue-100 rounded-xl bg-blue-50 outline-none text-sm font-bold">
+                    <option value="">-- Pilih --</option>
+                    <option value="Beras">Beras</option>
+                    <option value="Bawang Merah">Bawang Merah</option>
+                    <option value="Bawang Putih">Bawang Putih</option>
+                    <option value="Cabai Merah">Cabai Merah</option>
+                    <option value="Cabai Rawit">Cabai Rawit</option>
+                    <option value="Daging Ayam Ras">Daging Ayam Ras</option>
+                    <option value="Telur Ayam Ras">Telur Ayam Ras</option>
+                    <option value="Susu">Susu</option>
+                    <option value="Lainnya">Lainnya...</option>
+                </select>
+                <input type="text" id="komoditas-lainnya" class="hidden mt-2 w-full p-3 border-2 border-orange-200 rounded-xl outline-none text-sm bg-orange-50" placeholder="Sebutkan Komoditas Lainnya">
             </div>
 
-            <div id="location-status" class="text-[10px] text-gray-500 italic bg-gray-200 p-2 rounded-lg text-center font-bold">
-                📍 Mencari lokasi GPS...
+            <div class="grid grid-cols-2 gap-3">
+                <div>
+                    <label class="block text-gray-700 font-black mb-1 text-[10px] uppercase">Responden :</label>
+                    <input type="text" id="responden" class="w-full p-3 border-2 border-gray-100 rounded-xl outline-none text-sm" placeholder="Toko/Pasar">
+                </div>
+                <div>
+                    <label class="block text-gray-700 font-black mb-1 text-[10px] uppercase">Kualitas :</label>
+                    <input type="text" id="kualitas" class="w-full p-3 border-2 border-gray-100 rounded-xl outline-none text-sm" placeholder="Premium/dll">
+                </div>
             </div>
 
-            <button id="btn-kirim" onclick="sendData()" class="w-full bg-[#28a745] hover:bg-green-700 text-white font-black py-5 rounded-2xl shadow-[0_4px_0_rgb(20,100,40)] active:shadow-none active:translate-y-1 transition-all text-xl uppercase tracking-tighter flex items-center justify-center">
-                🚀 KIRIM DATA KE SHEETS
-            </button>
+            <div class="bg-blue-50 p-3 rounded-2xl border border-blue-100">
+                <label class="block text-blue-800 font-black mb-2 text-[10px] uppercase">Perkembangan Harga :</label>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Level</th>
+                            <th>Naik</th>
+                            <th>Stabil</th>
+                            <th>Turun</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td class="font-bold">Produsen</td>
+                            <td><input type="radio" name="harga_produsen" value="Naik" class="radio-custom"></td>
+                            <td><input type="radio" name="harga_produsen" value="Stabil" class="radio-custom" checked></td>
+                            <td><input type="radio" name="harga_produsen" value="Turun" class="radio-custom"></td>
+                        </tr>
+                        <tr>
+                            <td class="font-bold">Distributor</td>
+                            <td><input type="radio" name="harga_distributor" value="Naik" class="radio-custom"></td>
+                            <td><input type="radio" name="harga_distributor" value="Stabil" class="radio-custom" checked></td>
+                            <td><input type="radio" name="harga_distributor" value="Turun" class="radio-custom"></td>
+                        </tr>
+                        <tr>
+                            <td class="font-bold">Konsumen</td>
+                            <td><input type="radio" name="harga_konsumen" value="Naik" class="radio-custom"></td>
+                            <td><input type="radio" name="harga_konsumen" value="Stabil" class="radio-custom" checked></td>
+                            <td><input type="radio" name="harga_konsumen" value="Turun" class="radio-custom"></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <div class="grid grid-cols-2 gap-3">
+                <div>
+                    <label class="block text-gray-700 font-black mb-1 text-[10px] uppercase text-green-700">Harga (Rp) :</label>
+                    <input type="number" id="harga" class="w-full p-3 border-2 border-green-100 rounded-xl outline-none text-sm font-bold bg-green-50" placeholder="0">
+                </div>
+                <div>
+                    <label class="block text-gray-700 font-black mb-1 text-[10px] uppercase">Asal Pasokan :</label>
+                    <input type="text" id="pasokan" class="w-full p-3 border-2 border-gray-100 rounded-xl outline-none text-sm" placeholder="Asal Barang">
+                </div>
+            </div>
+
+            <div class="bg-gray-50 p-3 rounded-2xl border border-gray-200">
+                <label class="block text-gray-700 font-black mb-2 text-[10px] uppercase font-bold">Fenomena Perkembangan Harga :</label>
+                
+                <textarea id="penjelasan" rows="2" class="w-full p-2 border border-gray-200 rounded-xl text-xs outline-none" placeholder="Penjelasan fenomena..."></textarea>
+            </div>
+
+            <div id="preview-container" class="w-full h-36 bg-gray-50 rounded-2xl flex items-center justify-center border-2 border-dashed border-gray-300 overflow-hidden relative shadow-inner">
+                <img id="image-preview" class="hidden w-full h-full object-cover">
+                <span id="placeholder-text" class="text-gray-400 text-[10px] font-bold">FOTO PRODUK</span>
+            </div>
+
+            <div class="grid grid-cols-2 gap-3">
+                <button onclick="document.getElementById('camera-input').click()" class="bg-[#0066b2] text-white font-bold py-3 rounded-xl text-xs shadow-md active:scale-95 transition-all">📸 KAMERA</button>
+                <input type="file" id="camera-input" accept="image/*" capture="camera" class="hidden" onchange="previewImage(event)">
+                <button onclick="document.getElementById('file-input').click()" class="bg-[#ffc107] text-black font-bold py-3 rounded-xl text-xs shadow-md active:scale-95 transition-all">🖼️ GALERI</button>
+                <input type="file" id="file-input" accept="image/*" class="hidden" onchange="previewImage(event)">
+            </div>
+
+            <div id="location-status" class="text-[9px] text-gray-500 italic text-center font-bold">📍 Mencari lokasi...</div>
+
+            <button id="btn-kirim" onclick="sendData()" class="w-full bg-[#28a745] text-white font-black py-4 rounded-2xl shadow-xl text-lg uppercase tracking-tight active:scale-95 transition-all">🚀 Kirim Data BPS</button>
         </div>
-
-        <p class="text-center text-gray-400 text-[10px] mt-8 uppercase font-bold">© 2026 BPS Kabupaten Tabalong</p>
     </div>
 
     <script>
     let userCoords = "Tidak Terdeteksi";
 
-    // A. Fungsi Ambil GPS Otomatis saat web dibuka
     window.onload = function() {
         if (navigator.geolocation) {
             navigator.geolocation.getCurrentPosition(function(pos) {
                 userCoords = pos.coords.latitude + ", " + pos.coords.longitude;
-                document.getElementById('location-status').innerHTML = "📍 Lokasi Terkunci: " + userCoords;
-                document.getElementById('location-status').classList.replace('bg-gray-200', 'bg-green-100');
-            }, function() {
-                document.getElementById('location-status').innerHTML = "📍 GPS Tidak Aktif";
+                document.getElementById('location-status').innerHTML = "📍 Lokasi: " + userCoords;
+                document.getElementById('location-status').classList.add('text-green-600');
             });
         }
     };
 
-    // B. Fungsi Preview Gambar
+    function toggleLainnya() {
+        const select = document.getElementById('komoditas-select');
+        const inputLainnya = document.getElementById('komoditas-lainnya');
+        inputLainnya.classList.toggle('hidden', select.value !== "Lainnya");
+    }
+
     function previewImage(event) {
         const file = event.target.files[0];
         const reader = new FileReader();
         reader.onload = function(e) {
             const output = document.getElementById('image-preview');
-            const placeholder = document.getElementById('placeholder-text');
             output.src = e.target.result;
             output.classList.remove('hidden');
-            placeholder.classList.add('hidden');
+            document.getElementById('placeholder-text').classList.add('hidden');
         };
         if (file) reader.readAsDataURL(file);
     }
 
-    // C. Fungsi Kirim Data
     async function sendData() {
-        const camInput = document.getElementById('camera-input');
-        const fileInput = document.getElementById('file-input');
-        const deskripsi = document.getElementById('deskripsi').value;
         const btn = document.getElementById('btn-kirim');
-        
-        // Cek apakah ada file dari salah satu input
-        const file = camInput.files[0] || fileInput.files[0];
+        const file = document.getElementById('camera-input').files[0] || document.getElementById('file-input').files[0];
 
-        if (!file || !deskripsi) {
-            alert('Maaf , Foto dan Deskripsi jangan dikosongkan ya!');
+        const selectValue = document.getElementById('komoditas-select').value;
+        const komoditasFinal = (selectValue === "Lainnya") ? document.getElementById('komoditas-lainnya').value : selectValue;
+
+        // Ambil Perkembangan Harga
+        const p_produsen = document.querySelector('input[name="harga_produsen"]:checked').value;
+        const p_distributor = document.querySelector('input[name="harga_distributor"]:checked').value;
+        const p_konsumen = document.querySelector('input[name="harga_konsumen"]:checked').value;
+        const perkembanganFinal = `Produsen:${p_produsen}, Dist:${p_distributor}, Konsumen:${p_konsumen}`;
+
+        // Fenomena
+        let f_terpilih = [];
+        document.querySelectorAll('.f-check:checked').forEach(el => f_terpilih.push(el.value));
+        const fenomenaFinal = f_terpilih.join(", ") + " | Ket: " + document.getElementById('penjelasan').value;
+
+        if (!document.getElementById('nama').value || !file || !komoditasFinal) {
+            alert('Lengkapi Nama, Komoditas, dan Foto ya, Pak!');
             return;
         }
 
         btn.disabled = true;
-        btn.innerHTML = "⏳ SEDANG MENGIRIM...";
+        btn.innerHTML = "⏳ MENGIRIM...";
 
         try {
-            // 1. Upload ke ImgBB
             const formData = new FormData();
             formData.append('image', file);
-            
-            const imgRes = await fetch(`https://api.imgbb.com/1/upload?key=da686e0dd69fe24a739317f961163f1e`, {
-                method: 'POST',
-                body: formData
-            });
+            const imgRes = await fetch(`https://api.imgbb.com/1/upload?key=da686e0dd69fe24a739317f961163f1e`, { method: 'POST', body: formData });
             const imgData = await imgRes.json();
             const photoUrl = imgData.data.url;
 
-            // 2. Kirim ke SheetDB
-            const SHEETDB_URL = 'https://sheetdb.io/api/v1/cgdaztqgewdw5'; 
-
-            const res = await fetch(SHEETDB_URL, {
+            const res = await fetch('https://sheetdb.io/api/v1/cgdaztqgewdw5', {
                 method: 'POST',
-                headers: {
-                    'Accept': 'application/json',
-                    'Content-Type': 'application/json'
-                },
+                headers: { 'Accept': 'application/json', 'Content-Type': 'application/json' },
                 body: JSON.stringify({
                     data: [
                         {
                             'waktu': new Date().toLocaleString('id-ID'),
-                            'deskripsi': deskripsi,
+                            'nama': document.getElementById('nama').value,
+                            'kegiatan': document.getElementById('kegiatan').value,
+                            'komoditas': komoditasFinal,
+                            'responden': document.getElementById('responden').value,
+                            'kualitas': document.getElementById('kualitas').value,
+                            'perkembangan': perkembanganFinal, // Kolom Baru
+                            'harga': document.getElementById('harga').value,
+                            'pasokan': document.getElementById('pasokan').value,
+                            'fenomena': fenomenaFinal,
                             'foto': photoUrl,
-                            'lokasi': userCoords // Kolom tambahan untuk GPS
+                            'lokasi': userCoords
                         }
                     ]
                 })
             });
 
             if (res.ok) {
-                alert("✅ BERHASIL! Data pengawasan sudah masuk");
+                alert("✅ DATA BERHASIL TERKIRIM!");
                 location.reload(); 
             }
-        } catch (error) {
-            alert("Error: " + error.message);
+        } catch (e) {
+            alert("Gagal: " + e.message);
         } finally {
             btn.disabled = false;
-            btn.innerHTML = "🚀 KIRIM DATA";
+            btn.innerHTML = "🚀 Kirim Data BPS";
         }
     }
     </script>
 </body>
-
 </html>
