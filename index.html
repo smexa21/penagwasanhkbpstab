@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>BPS Tabalong - Pengawasan</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="icon" type="image/png" href="https://www.bps.go.id/assets/logo-bps.png">
+    <link rel="apple-touch-icon" href="https://www.bps.go.id/assets/logo-bps.png">
+</head>
+<body class="bg-gray-100 font-sans">
+
+    <div class="bg-[#0066b2] text-white p-4 shadow-lg flex items-center justify-center space-x-4 border-b-4 border-[#ffc107]">
+        <img src="https://www.bps.go.id/_next/image?url=%2Fassets%2Flogo-bps.png&w=1080&q=75" alt="Logo BPS" class="h-12 w-auto">
+        <div class="text-left">
+            <h1 class="text-xl font-bold leading-tight">PENGAWASAN BPS</h1>
+            <p class="text-xs font-bold tracking-widest uppercase opacity-90">Kab. Tabalong</p>
+        </div>
+    </div>
+
+    <div class="p-5 max-w-md mx-auto mb-10">
+        <div id="preview-container" class="w-full h-72 bg-white rounded-2xl mb-6 flex items-center justify-center border-4 border-dashed border-gray-300 overflow-hidden shadow-inner relative">
+            <img id="image-preview" class="hidden w-full h-full object-cover">
+            <div id="placeholder-text" class="text-center p-4">
+                <span class="text-5xl block mb-2">📸</span>
+                <span class="text-gray-400 font-bold uppercase text-xs">Belum Ada Foto</span>
+            </div>
+        </div>
+
+        <div class="space-y-6">
+            <div class="grid grid-cols-2 gap-4">
+                <button onclick="document.getElementById('camera-input').click()" class="bg-[#0066b2] text-white font-black py-4 rounded-2xl shadow-[0_4px_0_rgb(0,70,130)] active:shadow-none active:translate-y-1 transition-all text-lg flex flex-col items-center">
+                    <span class="text-2xl mb-1">📸</span> KAMERA
+                </button>
+                <input type="file" id="camera-input" accept="image/*" capture="camera" class="hidden" onchange="previewImage(event)">
+
+                <button onclick="document.getElementById('file-input').click()" class="bg-[#ffc107] text-black font-black py-4 rounded-2xl shadow-[0_4px_0_rgb(214,158,0)] active:shadow-none active:translate-y-1 transition-all text-lg flex flex-col items-center">
+                    <span class="text-2xl mb-1">🖼️</span> GALERI
+                </button>
+                <input type="file" id="file-input" accept="image/*" class="hidden" onchange="previewImage(event)">
+            </div>
+
+            <div>
+                <label class="block text-gray-700 font-black mb-2 text-sm uppercase tracking-wide">Detail Laporan :</label>
+                <textarea id="deskripsi" rows="4" class="w-full p-4 border-2 border-gray-200 rounded-xl shadow-sm focus:border-[#0066b2] outline-none text-lg transition-all" placeholder="Contoh: Stok material di pasar Tanjung..."></textarea>
+            </div>
+
+            <div id="location-status" class="text-[10px] text-gray-500 italic bg-gray-200 p-2 rounded-lg text-center font-bold">
+                📍 Mencari lokasi GPS...
+            </div>
+
+            <button id="btn-kirim" onclick="sendData()" class="w-full bg-[#28a745] hover:bg-green-700 text-white font-black py-5 rounded-2xl shadow-[0_4px_0_rgb(20,100,40)] active:shadow-none active:translate-y-1 transition-all text-xl uppercase tracking-tighter flex items-center justify-center">
+                🚀 KIRIM DATA KE SHEETS
+            </button>
+        </div>
+
+        <p class="text-center text-gray-400 text-[10px] mt-8 uppercase font-bold">© 2026 BPS Kabupaten Tabalong</p>
+    </div>
+
+    <script>
+    let userCoords = "Tidak Terdeteksi";
+
+    // A. Fungsi Ambil GPS Otomatis saat web dibuka
+    window.onload = function() {
+        if (navigator.geolocation) {
+            navigator.geolocation.getCurrentPosition(function(pos) {
+                userCoords = pos.coords.latitude + ", " + pos.coords.longitude;
+                document.getElementById('location-status').innerHTML = "📍 Lokasi Terkunci: " + userCoords;
+                document.getElementById('location-status').classList.replace('bg-gray-200', 'bg-green-100');
+            }, function() {
+                document.getElementById('location-status').innerHTML = "📍 GPS Tidak Aktif";
+            });
+        }
+    };
+
+    // B. Fungsi Preview Gambar
+    function previewImage(event) {
+        const file = event.target.files[0];
+        const reader = new FileReader();
+        reader.onload = function(e) {
+            const output = document.getElementById('image-preview');
+            const placeholder = document.getElementById('placeholder-text');
+            output.src = e.target.result;
+            output.classList.remove('hidden');
+            placeholder.classList.add('hidden');
+        };
+        if (file) reader.readAsDataURL(file);
+    }
+
+    // C. Fungsi Kirim Data
+    async function sendData() {
+        const camInput = document.getElementById('camera-input');
+        const fileInput = document.getElementById('file-input');
+        const deskripsi = document.getElementById('deskripsi').value;
+        const btn = document.getElementById('btn-kirim');
+        
+        // Cek apakah ada file dari salah satu input
+        const file = camInput.files[0] || fileInput.files[0];
+
+        if (!file || !deskripsi) {
+            alert('Maaf , Foto dan Deskripsi jangan dikosongkan ya!');
+            return;
+        }
+
+        btn.disabled = true;
+        btn.innerHTML = "⏳ SEDANG MENGIRIM...";
+
+        try {
+            // 1. Upload ke ImgBB
+            const formData = new FormData();
+            formData.append('image', file);
+            
+            const imgRes = await fetch(`https://api.imgbb.com/1/upload?key=da686e0dd69fe24a739317f961163f1e`, {
+                method: 'POST',
+                body: formData
+            });
+            const imgData = await imgRes.json();
+            const photoUrl = imgData.data.url;
+
+            // 2. Kirim ke SheetDB
+            const SHEETDB_URL = 'https://sheetdb.io/api/v1/cgdaztqgewdw5'; 
+
+            const res = await fetch(SHEETDB_URL, {
+                method: 'POST',
+                headers: {
+                    'Accept': 'application/json',
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    data: [
+                        {
+                            'waktu': new Date().toLocaleString('id-ID'),
+                            'deskripsi': deskripsi,
+                            'foto': photoUrl,
+                            'lokasi': userCoords // Kolom tambahan untuk GPS
+                        }
+                    ]
+                })
+            });
+
+            if (res.ok) {
+                alert("✅ BERHASIL! Data pengawasan sudah masuk");
+                location.reload(); 
+            }
+        } catch (error) {
+            alert("Error: " + error.message);
+        } finally {
+            btn.disabled = false;
+            btn.innerHTML = "🚀 KIRIM DATA";
+        }
+    }
+    </script>
+</body>
+</html>
