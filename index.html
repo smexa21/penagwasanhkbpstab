@@ -158,6 +158,14 @@
     let userCoords = "Tidak Terdeteksi";
 
     window.onload = function() {
+         // Logika Menghilangkan Splash Screen setelah 2.5 detik
+        setTimeout(() => {
+            const splash = document.getElementById('splash-screen');
+            splash.style.opacity = '0';
+            setTimeout(() => splash.style.display = 'none', 800);
+        }, 1000);
+
+        
         if (navigator.geolocation) {
             navigator.geolocation.getCurrentPosition(function(pos) {
                 userCoords = pos.coords.latitude + ", " + pos.coords.longitude;
@@ -267,4 +275,5 @@
     </script>
 </body>
 </html>
+
 
