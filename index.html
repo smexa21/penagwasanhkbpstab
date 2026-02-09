@@ -12,10 +12,35 @@
         /* Memperbesar area klik agar mudah di HP */
         .radio-cell { cursor: pointer; position: relative; }
         .radio-custom { width: 20px; height: 20px; pointer-events: none; }
+
+        /* Gaya Splash Screen */
+        #splash-screen {
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background-color: #0066b2;
+            display: flex; flex-direction: column;
+            align-items: center; justify-content: center;
+            z-index: 9999;
+            transition: opacity 0.8s ease;
+        }
+        .loader {
+            border: 4px solid #f3f3f3;
+            border-top: 4px solid #ffc107;
+            border-radius: 50%;
+            width: 30px; height: 30px;
+            animation: spin 1s linear infinite;
+            margin-top: 20px;
+        }
+        @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
     </style>
 </head>
 <body class="bg-gray-100 font-sans text-gray-800">
-    
+
+    <div id="splash-screen">
+        <img src="https://www.bps.go.id/_next/image?url=%2Fassets%2Flogo-bps.png&w=1080&q=75" alt="Logo BPS" class="w-32 h-auto mb-4 animate-pulse">
+        <h2 class="text-white font-bold tracking-widest text-sm">BPS KAB. TABALONG</h2>
+        <div class="loader"></div>
+    </div>
 
     <div class="bg-[#0066b2] text-white p-4 shadow-lg flex items-center justify-center space-x-4 border-b-4 border-[#ffc107]">
         <img src="https://www.bps.go.id/_next/image?url=%2Fassets%2Flogo-bps.png&w=1080&q=75" alt="Logo BPS" class="h-10 w-auto">
@@ -39,11 +64,9 @@
                 </div>
             </div>
 
-             <div>
-                <div>
-                    <label class="block font-black mb-1 text-[10px] uppercase">Responden :</label>
-                    <input type="text" id="responden" class="w-full p-3 border-2 border-gray-100 rounded-xl outline-none text-sm" placeholder="Pasar/Toko">
-                </div>
+            <div>
+                <label class="block font-black mb-1 text-[10px] uppercase">Responden :</label>
+                <input type="text" id="responden" class="w-full p-3 border-2 border-gray-100 rounded-xl outline-none text-sm" placeholder="Pasar/Toko">
             </div>
 
             <div>
@@ -58,7 +81,7 @@
                     <option value="Daging Ayam Ras">Daging Ayam Ras</option>
                     <option value="Telur Ayam Ras">Telur Ayam Ras</option>
                     <option value="Susu">Susu</option>
-                     <option value="Daging Sapi">Daging Sapi</option>
+                    <option value="Daging Sapi">Daging Sapi</option>
                     <option value="Minyak Goreng">Minyak Goreng</option>
                     <option value="Gula Pasir">Gula Pasir</option>
                     <option value="Ikan Gabus">Ikan Gabus</option>
@@ -67,10 +90,10 @@
                 <input type="text" id="komoditas-lainnya" class="hidden mt-2 w-full p-3 border-2 border-orange-200 rounded-xl outline-none text-sm bg-orange-50" placeholder="Sebutkan Lainnya">
             </div>
 
-              <div>
-                    <label class="block font-black mb-1 text-[10px] uppercase">Kualitas :</label>
-                    <input type="text" id="kualitas" class="w-full p-3 border-2 border-gray-100 rounded-xl outline-none text-sm" placeholder="Premium/dll">
-                </div>
+            <div>
+                <label class="block font-black mb-1 text-[10px] uppercase">Kualitas :</label>
+                <input type="text" id="kualitas" class="w-full p-3 border-2 border-gray-100 rounded-xl outline-none text-sm" placeholder="Premium/dll">
+            </div>
 
             <div class="bg-gray-50 p-3 rounded-2xl border border-gray-200">
                 <label class="block font-black mb-2 text-[10px] uppercase text-gray-600 italic font-bold text-center">Tabel Perkembangan Harga (Klik untuk Pilih/Batal)</label>
@@ -106,31 +129,31 @@
                 </table>
             </div>
 
-                <div>
-                    <label class="block font-black mb-1 text-[10px] uppercase text-green-700 font-bold">Harga (Rp) :</label>
-                    <input type="number" id="harga" class="w-full p-3 border-2 border-green-100 rounded-xl outline-none text-sm font-bold bg-green-50" placeholder="0">
-                </div>
+            <div>
+                <label class="block font-black mb-1 text-[10px] uppercase text-green-700 font-bold">Harga (Rp) :</label>
+                <input type="number" id="harga" class="w-full p-3 border-2 border-green-100 rounded-xl outline-none text-sm font-bold bg-green-50" placeholder="0">
+            </div>
 
-                  <div>
-                    <label class="block font-black mb-1 text-[10px] uppercase">Asal Pasokan :</label>
-                    <select id="pasokan" class="w-full p-3 border-2 border-gray-100 rounded-xl outline-none text-sm bg-white">
-                        <option value="">-- Pilih Asal Pasokan --</option>
-                        <option value="distributor/pedagang besar">Distributor/Pedagang Besar</option>
-                        <option value="petani/kandang">Petani/Kandang</option>
-                    </select>
-                </div>
+            <div>
+                <label class="block font-black mb-1 text-[10px] uppercase">Asal Pasokan :</label>
+                <select id="pasokan" class="w-full p-3 border-2 border-gray-100 rounded-xl outline-none text-sm bg-white">
+                    <option value="">-- Pilih Asal Pasokan --</option>
+                    <option value="distributor/pedagang besar">Distributor/Pedagang Besar</option>
+                    <option value="petani/kandang">Petani/Kandang</option>
+                </select>
+            </div>
 
-                <div>
-                    <label class="block font-black mb-1 text-[10px] uppercase">Wilayah :</label>
-                    <input type="text" id="wilayah" class="w-full p-3 border-2 border-gray-100 rounded-xl outline-none text-sm" placeholder="Nama Wilayah/Kabupaten">
-                </div>
+            <div>
+                <label class="block font-black mb-1 text-[10px] uppercase">Wilayah :</label>
+                <input type="text" id="wilayah" class="w-full p-3 border-2 border-gray-100 rounded-xl outline-none text-sm" placeholder="Nama Wilayah/Kabupaten">
+            </div>
 
             <div class="bg-gray-50 p-3 rounded-2xl border border-gray-200">
                 <label class="block font-black mb-2 text-[10px] uppercase">Fenomena tambahan :</label>
                 <textarea id="penjelasan" rows="2" class="w-full p-2 border border-gray-200 rounded-xl text-xs outline-none" placeholder="Isi penjelasan fenomena di sini..."></textarea>
             </div>
 
-            <div id="preview-container" class="w-full h-36 bg-gray-50 rounded-2xl flex items-center justify-center border-2 border-dashed border-gray-300 overflow-hidden relative">
+            <div id="preview-container" class="w-full h-36 bg-gray-50 rounded-2xl flex items-center justify-center border-2 border-dashed border-gray-300 overflow-hidden relative shadow-inner">
                 <img id="image-preview" class="hidden w-full h-full object-cover">
                 <span id="placeholder-text" class="text-gray-400 text-[10px] font-bold">AMBIL FOTO</span>
             </div>
@@ -146,16 +169,20 @@
 
             <button id="btn-kirim" onclick="sendData()" class="w-full bg-[#28a745] text-white font-black py-4 rounded-2xl shadow-xl text-lg uppercase tracking-tight active:scale-95 transition-all">🚀 Kirim ke Database</button>
         </div>
-        <p class="text-center text-gray-400 text-[9px] mt-6 font-bold uppercase tracking-widest">BPS KABUPATEN TABALONG</p>
+        <p class="text-center text-gray-400 text-[9px] mt-6 font-bold uppercase tracking-widest text-xs">BPS KABUPATEN TABALONG</p>
     </div>
 
     <script>
     let userCoords = "Tidak Terdeteksi";
 
     window.onload = function() {
-    
+        // Logika Menghilangkan Splash Screen setelah 2.5 detik
+        setTimeout(() => {
+            const splash = document.getElementById('splash-screen');
+            splash.style.opacity = '0';
+            setTimeout(() => splash.style.display = 'none', 800);
+        }, 1000);
 
-        
         if (navigator.geolocation) {
             navigator.geolocation.getCurrentPosition(function(pos) {
                 userCoords = pos.coords.latitude + ", " + pos.coords.longitude;
@@ -166,16 +193,13 @@
         }
     };
 
-    // LOGIKA UNCHECK RADIO BUTTON
     function handleRadioClick(cell, groupName) {
         const radio = cell.querySelector('input[type="radio"]');
         if (radio.checked) {
             radio.checked = false;
-            radio.dataset.state = 'unchecked';
         } else {
-            document.querySelectorAll(`input[name="${groupName}"]`).forEach(r => r.dataset.state = 'unchecked');
+            document.querySelectorAll(`input[name="${groupName}"]`).forEach(r => r.checked = false);
             radio.checked = true;
-            radio.dataset.state = 'checked';
         }
     }
 
@@ -210,10 +234,8 @@
         }
         const perkembanganFinal = `Produsen:${getVal('p_prod')}, Dist:${getVal('p_dist')}, Konsumen:${getVal('p_kons')}`;
 
-        const fenomenaFinal = "Ket: " + document.getElementById('penjelasan').value;
-
         if (!document.getElementById('nama').value || !file || !komoditasFinal) {
-            alert('Nama, Komoditas, dan Foto jangan dikosongkan ya, Pak Ismail!');
+            alert('Waduh Pak Ismail, Nama, Komoditas, dan Foto wajib diisi ya!');
             return;
         }
 
@@ -221,40 +243,42 @@
         btn.innerHTML = "⏳ SEDANG MENGIRIM...";
 
         try {
+            // 1. Upload ke ImgBB
             const formData = new FormData();
             formData.append('image', file);
             const imgRes = await fetch(`https://api.imgbb.com/1/upload?key=da686e0dd69fe24a739317f961163f1e`, { method: 'POST', body: formData });
             const imgData = await imgRes.json();
             const photoUrl = imgData.data.url;
 
-            const res = await fetch('https://sheetdb.io/api/v1/cgdaztqgewdw5', {
+            // 2. Kirim ke Google Apps Script Bapak
+            const APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbyYvP832S_mU01PY7klohIuCGEXhMl8Ej_LWDcrVSilVAyM5-_Y-2PQeA9vSkjOISgE/exec'; 
+
+            await fetch(APPS_SCRIPT_URL, {
                 method: 'POST',
-                headers: { 'Accept': 'application/json', 'Content-Type': 'application/json' },
+                mode: 'no-cors',
+                headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({
-                    data: [
-                        {
-                            'waktu': new Date().toLocaleString('id-ID'),
-                            'nama': document.getElementById('nama').value,
-                            'kegiatan': document.getElementById('kegiatan').value,
-                            'komoditas': komoditasFinal,
-                            'responden': document.getElementById('responden').value,
-                            'kualitas': document.getElementById('kualitas').value,
-                            'perkembangan': perkembanganFinal,
-                            'harga': document.getElementById('harga').value,
-                            'pasokan': document.getElementById('pasokan').value,
-                            'wilayah': document.getElementById('wilayah').value,
-                            'fenomena': fenomenaFinal,
-                            'foto': photoUrl,
-                            'lokasi': userCoords
-                        }
-                    ]
+                    data: [{
+                        'waktu': new Date().toLocaleString('id-ID'),
+                        'nama': document.getElementById('nama').value,
+                        'kegiatan': document.getElementById('kegiatan').value,
+                        'komoditas': komoditasFinal,
+                        'responden': document.getElementById('responden').value,
+                        'kualitas': document.getElementById('kualitas').value,
+                        'perkembangan': perkembanganFinal,
+                        'harga': document.getElementById('harga').value,
+                        'pasokan': document.getElementById('pasokan').value,
+                        'wilayah': document.getElementById('wilayah').value,
+                        'fenomena': "Ket: " + document.getElementById('penjelasan').value,
+                        'foto': photoUrl,
+                        'lokasi': userCoords
+                    }]
                 })
             });
 
-            if (res.ok) {
-                alert("✅ DATA SUKSES TERKIRIM!");
-                location.reload(); 
-            }
+            alert("✅ DATA BERHASIL DIKIRIM KE GOOGLE SHEETS!");
+            location.reload(); 
+
         } catch (e) {
             alert("Gagal: " + e.message);
         } finally {
@@ -265,6 +289,3 @@
     </script>
 </body>
 </html>
-
-
-
