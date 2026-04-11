@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard Pengawasan - BPS Tabalong</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        .table-container { overflow-x: auto; }
+        th { background-color: #0066b2; color: white; text-transform: uppercase; font-size: 9px; padding: 12px; text-align: left; border: 1px solid #005596; }
+        td { font-size: 11px; padding: 10px; border-bottom: 1px solid #edf2f7; text-align: left; border: 1px solid #f1f5f9; }
+        tr:nth-child(even) { background-color: #f8fafc; }
+        .badge { padding: 2px 6px; border-radius: 4px; font-size: 8px; font-weight: bold; color: white; display: inline-block; margin-bottom: 2px; }
+        .bg-naik { background-color: #ef4444; }
+        .bg-stabil { background-color: #3b82f6; }
+        .bg-turun { background-color: #10b981; }
+        
+        #loading-overlay {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(255,255,255,0.9); display: flex; flex-direction: column;
+            align-items: center; justify-content: center; z-index: 1000;
+        }
+    </style>
+</head>
+<body class="bg-gray-100 font-sans text-gray-800">
+
+    <div id="loading-overlay">
+        <div class="animate-spin rounded-full h-12 w-12 border-b-2 border-[#0066b2]"></div>
+        <p class="mt-4 font-bold text-[#0066b2]">Memuat Data Pengawasan...</p>
+    </div>
+
+    <div class="bg-[#0066b2] text-white p-4 shadow-lg border-b-4 border-[#ffc107] sticky top-0 z-50">
+        <div class="max-w-full mx-auto flex justify-between items-center">
+            <div class="flex items-center space-x-3">
+                <img src="https://www.bps.go.id/_next/image?url=%2Fassets%2Flogo-bps.png&w=1080&q=75" class="h-8">
+                <div>
+                    <h1 class="font-bold text-sm uppercase">Monitoring Pengawasan</h1>
+                    <p class="text-[9px] text-yellow-300 font-bold uppercase tracking-widest">BPS Kab. Tabalong</p>
+                </div>
+            </div>
+            <button onclick="fetchData()" class="bg-[#ffc107] text-black text-[10px] font-bold px-3 py-2 rounded-lg hover:bg-yellow-400">🔄 REFRESH</button>
+        </div>
+    </div>
+
+    <div class="p-4">
+        <div class="bg-white rounded-xl shadow-md overflow-hidden border border-gray-200">
+            <div class="p-4 border-b border-gray-100 bg-gray-50">
+                <input type="text" id="search" onkeyup="filterTable()" placeholder="Cari data..." class="text-[11px] p-3 border rounded-xl outline-none focus:border-blue-500 w-full">
+            </div>
+            <div class="table-container">
+                <table class="w-full" id="data-table">
+                    <thead>
+                        <tr>
+                            <th>Waktu</th>
+                            <th>Petugas / Kegiatan</th>
+                            <th>Responden</th>
+                            <th>Komoditas</th>
+                            <th>Perkembangan</th>
+                            <th>Harga</th>
+                            <th>Pasokan / Wilayah</th>
+                            <th>Fenomena</th>
+                            <th>Foto</th>
+                        </tr>
+                    </thead>
+                    <tbody id="table-body"></tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbyYvP832S_mU01PY7klohIuCGEXhMl8Ej_LWDcrVSilVAyM5-_Y-2PQeA9vSkjOISgE/exec';
+
+        async function fetchData() {
+            document.getElementById('loading-overlay').style.display = 'flex';
+            try {
+                const response = await fetch(APPS_SCRIPT_URL);
+                const result = await response.json();
+                if (result.status === 'success') {
+                    renderTable(result.data);
+                }
+            } catch (error) {
+                alert('Gagal mengambil data.');
+            } finally {
+                document.getElementById('loading-overlay').style.display = 'none';
+            }
+        }
+
+        function parsePerkembangan(str) {
+            if(!str || str === '-' || !str.includes(':')) return '-';
+            return str.split(',').map(item => {
+                const parts = item.split(':');
+                if(parts.length < 2) return '';
+                const label = parts[0].trim();
+                const status = parts[1].trim();
+                let colorClass = 'bg-stabil';
+                if(status === 'Naik') colorClass = 'bg-naik';
+                if(status === 'Turun') colorClass = 'bg-turun';
+                return `<span class="badge ${colorClass}">${label}: ${status}</span>`;
+            }).join(' ');
+        }
+
+        function formatRupiah(val) {
+            if(!val || val === '-') return '-';
+            // Membersihkan karakter non-angka agar tidak NaN
+            let cleanValue = val.toString().replace(/[^0-9]/g, '');
+            if(cleanValue === '') return '-';
+            return 'Rp ' + Number(cleanValue).toLocaleString('id-ID');
+        }
+
+        function renderTable(data) {
+            const tbody = document.getElementById('table-body');
+            tbody.innerHTML = '';
+            const sortedData = [...data].reverse();
+
+            sortedData.forEach(row => {
+                const tr = document.createElement('tr');
+                
+                // Pemetaan kolom database
+                const namaPetugas = row.nama || row.petugas || '-';
+                const kegiatan = row.kegiatan || '-';
+                const responden = row.responden || '-';
+                const komoditas = row.komoditas || '-';
+                const kualitas = row.kualitas || '-';
+                const pasokan = row.pasokan || '-';
+                const wilayah = row.wilayah || '-';
+                const fenomena = row.fenomena || '-';
+                const foto = row.foto || '';
+
+                tr.innerHTML = `
+                    <td class="whitespace-nowrap">${row.waktu || '-'}</td>
+                    <td>
+                        <div class="font-bold text-gray-700">${namaPetugas}</div>
+                        <div class="text-[9px] text-blue-600 font-black uppercase">${kegiatan}</div>
+                    </td>
+                    <td>${responden}</td>
+                    <td>
+                        <div class="font-bold text-blue-800">${komoditas}</div>
+                        <div class="text-[9px] text-gray-500 italic">${kualitas}</div>
+                    </td>
+                    <td><div class="flex flex-col">${parsePerkembangan(row.perkembangan)}</div></td>
+                    <td class="font-bold text-green-700">${formatRupiah(row.harga)}</td>
+                    <td>
+                        <div class="text-[10px] font-bold text-gray-600 uppercase">${pasokan}</div>
+                        <div class="text-[9px] italic text-gray-500">${wilayah}</div>
+                    </td>
+                    <td class="max-w-[150px] truncate text-[10px] text-gray-600" title="${fenomena}">${fenomena}</td>
+                    <td>
+                        ${foto ? `<a href="${foto}" target="_blank" class="bg-blue-600 text-white px-3 py-1.5 rounded-lg font-bold text-[9px]">LIHAT</a>` : '-'}
+                    </td>
+                `;
+                tbody.appendChild(tr);
+            });
+        }
+
+        function filterTable() {
+            const filter = document.getElementById("search").value.toUpperCase();
+            const tr = document.getElementById("table-body").getElementsByTagName("tr");
+            for (let i = 0; i < tr.length; i++) {
+                tr[i].style.display = tr[i].textContent.toUpperCase().includes(filter) ? "" : "none";
+            }
+        }
+
+        fetchData();
+    </script>
+</body>
+</html>
