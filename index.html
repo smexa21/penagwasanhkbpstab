@@ -3,33 +3,25 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>BPS Tabalong - Survei Harga</title>
+    <title>BPS Tabalong - Pengawasan Pegawai</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
         table { border-collapse: collapse; width: 100%; }
         th, td { border: 1px solid #e5e7eb; padding: 8px; text-align: center; font-size: 10px; }
         th { background-color: #f9fafb; font-weight: 900; }
-        /* Memperbesar area klik agar mudah di HP */
         .radio-cell { cursor: pointer; position: relative; }
         .radio-custom { width: 20px; height: 20px; pointer-events: none; }
 
-        /* Gaya Splash Screen */
         #splash-screen {
-            position: fixed;
-            top: 0; left: 0; width: 100%; height: 100%;
-            background-color: #0066b2;
-            display: flex; flex-direction: column;
-            align-items: center; justify-content: center;
-            z-index: 9999;
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background-color: #0066b2; display: flex; flex-direction: column;
+            align-items: center; justify-content: center; z-index: 9999;
             transition: opacity 0.8s ease;
         }
         .loader {
-            border: 4px solid #f3f3f3;
-            border-top: 4px solid #ffc107;
-            border-radius: 50%;
-            width: 30px; height: 30px;
-            animation: spin 1s linear infinite;
-            margin-top: 20px;
+            border: 4px solid #f3f3f3; border-top: 4px solid #ffc107;
+            border-radius: 50%; width: 30px; height: 30px;
+            animation: spin 1s linear infinite; margin-top: 20px;
         }
         @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
     </style>
@@ -38,14 +30,14 @@
 
     <div id="splash-screen">
         <img src="https://www.bps.go.id/_next/image?url=%2Fassets%2Flogo-bps.png&w=1080&q=75" alt="Logo BPS" class="w-32 h-auto mb-4 animate-pulse">
-        <h2 class="text-white font-bold tracking-widest text-sm">BPS KAB. TABALONG</h2>
+        <h2 class="text-white font-bold tracking-widest text-sm text-center">BPS KAB. TABALONG<br><span class="text-yellow-300">PENGAWASAN PEGAWAI</span></h2>
         <div class="loader"></div>
     </div>
 
     <div class="bg-[#0066b2] text-white p-4 shadow-lg flex items-center justify-center space-x-4 border-b-4 border-[#ffc107]">
         <img src="https://www.bps.go.id/_next/image?url=%2Fassets%2Flogo-bps.png&w=1080&q=75" alt="Logo BPS" class="h-10 w-auto">
         <div class="text-left">
-            <h1 class="text-lg font-bold leading-tight uppercase tracking-tight">Survei Harga</h1>
+            <h1 class="text-lg font-bold leading-tight uppercase tracking-tight">Pengawasan</h1>
             <p class="text-[10px] font-bold tracking-widest uppercase text-yellow-300">BPS Kab. Tabalong</p>
         </div>
     </div>
@@ -55,12 +47,16 @@
             
             <div class="grid grid-cols-2 gap-3">
                 <div>
-                    <label class="block font-black mb-1 text-[10px] uppercase">Petugas :</label>
-                    <input type="text" id="nama" class="w-full p-3 border-2 border-gray-100 rounded-xl outline-none text-sm focus:border-[#0066b2]" placeholder="Nama">
+                    <label class="block font-black mb-1 text-[10px] uppercase text-gray-500">Petugas :</label>
+                    <select id="petugas" onchange="updateKegiatan()" class="w-full p-3 border-2 border-gray-100 rounded-xl bg-white outline-none text-[11px] font-bold">
+                        <option value="">-- Pilih --</option>
+                    </select>
                 </div>
                 <div>
-                    <label class="block font-black mb-1 text-[10px] uppercase">Kegiatan :</label>
-                    <input type="text" id="kegiatan" class="w-full p-3 border-2 border-gray-100 rounded-xl outline-none text-sm focus:border-[#0066b2]" placeholder="HK 1.1 Pasar">
+                    <label class="block font-black mb-1 text-[10px] uppercase text-gray-500">Kegiatan :</label>
+                    <select id="kegiatan" class="w-full p-3 border-2 border-gray-100 rounded-xl bg-white outline-none text-[11px] font-bold">
+                        <option value="">-- Pilih Petugas --</option>
+                    </select>
                 </div>
             </div>
 
@@ -71,7 +67,7 @@
 
             <div>
                 <label class="block font-black mb-1 text-[10px] uppercase text-blue-700">Komoditas :</label>
-                <select id="komoditas-select" onchange="toggleLainnya()" class="w-full p-3 border-2 border-blue-100 rounded-xl bg-blue-50 outline-none text-sm font-bold">
+                <select id="komoditas-select" onchange="toggleLainnya()" class="w-full p-3 border-2 border-blue-50 rounded-xl bg-blue-50 outline-none text-sm font-bold">
                     <option value="">-- Pilih --</option>
                     <option value="Beras">Beras</option>
                     <option value="Bawang Merah">Bawang Merah</option>
@@ -96,7 +92,7 @@
             </div>
 
             <div class="bg-gray-50 p-3 rounded-2xl border border-gray-200">
-                <label class="block font-black mb-2 text-[10px] uppercase text-gray-600 italic font-bold text-center">Tabel Perkembangan Harga (Klik untuk Pilih/Batal)</label>
+                <label class="block font-black mb-2 text-[10px] uppercase text-gray-600 italic font-bold text-center uppercase">Perkembangan Harga</label>
                 <table>
                     <thead>
                         <tr>
@@ -134,23 +130,24 @@
                 <input type="number" id="harga" class="w-full p-3 border-2 border-green-100 rounded-xl outline-none text-sm font-bold bg-green-50" placeholder="0">
             </div>
 
-            <div>
-                <label class="block font-black mb-1 text-[10px] uppercase">Asal Pasokan :</label>
-                <select id="pasokan" class="w-full p-3 border-2 border-gray-100 rounded-xl outline-none text-sm bg-white">
-                    <option value="">-- Pilih Asal Pasokan --</option>
-                    <option value="distributor/pedagang besar">Distributor/Pedagang Besar</option>
-                    <option value="petani/kandang">Petani/Kandang</option>
-                </select>
-            </div>
-
-            <div>
-                <label class="block font-black mb-1 text-[10px] uppercase">Wilayah :</label>
-                <input type="text" id="wilayah" class="w-full p-3 border-2 border-gray-100 rounded-xl outline-none text-sm" placeholder="Nama Wilayah/Kabupaten">
+            <div class="grid grid-cols-2 gap-3">
+                <div>
+                    <label class="block font-black mb-1 text-[10px] uppercase">Pasokan :</label>
+                    <select id="pasokan" class="w-full p-3 border-2 border-gray-100 rounded-xl outline-none text-sm bg-white">
+                        <option value="">-- Pilih --</option>
+                        <option value="Distributor">Distributor</option>
+                        <option value="Petani/Kandang">Petani</option>
+                    </select>
+                </div>
+                <div>
+                    <label class="block font-black mb-1 text-[10px] uppercase">Wilayah :</label>
+                    <input type="text" id="wilayah" class="w-full p-3 border-2 border-gray-100 rounded-xl outline-none text-sm" placeholder="Nama Kota">
+                </div>
             </div>
 
             <div class="bg-gray-50 p-3 rounded-2xl border border-gray-200">
-                <label class="block font-black mb-2 text-[10px] uppercase">Fenomena tambahan :</label>
-                <textarea id="penjelasan" rows="2" class="w-full p-2 border border-gray-200 rounded-xl text-xs outline-none" placeholder="Isi penjelasan fenomena di sini..."></textarea>
+                <label class="block font-black mb-2 text-[10px] uppercase text-xs">Fenomena Tambahan :</label>
+                <textarea id="penjelasan" rows="2" class="w-full p-2 border border-gray-200 rounded-xl text-xs outline-none" placeholder="Isi penjelasan..."></textarea>
             </div>
 
             <div id="preview-container" class="w-full h-36 bg-gray-50 rounded-2xl flex items-center justify-center border-2 border-dashed border-gray-300 overflow-hidden relative shadow-inner">
@@ -165,33 +162,37 @@
                 <input type="file" id="file-input" accept="image/*" class="hidden" onchange="previewImage(event)">
             </div>
 
-            <div id="location-status" class="text-[9px] text-gray-500 italic text-center font-bold">📍 Mencari lokasi GPS...</div>
-
-            <button id="btn-kirim" onclick="sendData()" class="w-full bg-[#28a745] text-white font-black py-4 rounded-2xl shadow-xl text-lg uppercase tracking-tight active:scale-95 transition-all">🚀 Kirim ke Database</button>
+            <button id="btn-kirim" onclick="sendData()" class="w-full bg-[#28a745] text-white font-black py-4 rounded-2xl shadow-xl text-lg uppercase tracking-tight active:scale-95 transition-all">🚀 Kirim Data</button>
         </div>
         <p class="text-center text-gray-400 text-[9px] mt-6 font-bold uppercase tracking-widest text-xs">BPS KABUPATEN TABALONG</p>
     </div>
 
     <script>
-    let userCoords = "Tidak Terdeteksi";
+    const mappingPetugas = {
+        "Mariatul Kiftiah": ["HK 3 Outlet", "HK 5", "HK 6", "HK 2.1 Outlet", "HK 1.1 Pasar", "HK 1.1 Outlet"],
+        "Sri Wahyu Gantianiyari": ["HK 3 Outlet", "HK 5", "HK 6", "HK 2.1 Outlet", "HK 1.2 Pasar", "HK 1.2 Outlet"],
+        "Nazli Yunita": ["HK 3 Outlet", "HK 6", "HK 2.1 Pasar", "HK 2.1 Outlet"],
+        "Novrina Tri Saputri": ["HK 3 Pasar", "HK 3 Outlet", "HK 4", "HK 2.2 Outlet"],
+        "Yuli Misdi Yanti": ["HK 3 Outlet", "HK 4", "HK 1.1 Pasar", "HK 1.1 Outlet"],
+        "Lena Fetriyani": ["HK 3 Outlet", "HK 4", "HK 2.2 Pasar", "HK 2.2 Outlet"]
+    };
 
     window.onload = function() {
-        // Logika Menghilangkan Splash Screen setelah 2.5 detik
-        setTimeout(() => {
-            const splash = document.getElementById('splash-screen');
-            splash.style.opacity = '0';
-            setTimeout(() => splash.style.display = 'none', 800);
-        }, 1000);
+        const petSelect = document.getElementById('petugas');
+        Object.keys(mappingPetugas).forEach(p => petSelect.add(new Option(p, p)));
 
-        if (navigator.geolocation) {
-            navigator.geolocation.getCurrentPosition(function(pos) {
-                userCoords = pos.coords.latitude + ", " + pos.coords.longitude;
-                const loc = document.getElementById('location-status');
-                loc.innerHTML = "📍 GPS Terkunci: " + userCoords;
-                loc.classList.add('text-green-600');
-            });
-        }
+        setTimeout(() => {
+            document.getElementById('splash-screen').style.opacity = '0';
+            setTimeout(() => document.getElementById('splash-screen').style.display = 'none', 800);
+        }, 1000);
     };
+
+    function updateKegiatan() {
+        const pet = document.getElementById('petugas').value;
+        const kegSelect = document.getElementById('kegiatan');
+        kegSelect.innerHTML = '<option value="">-- Pilih Kegiatan --</option>';
+        if (pet) mappingPetugas[pet].forEach(k => kegSelect.add(new Option(k, k)));
+    }
 
     function handleRadioClick(cell, groupName) {
         const radio = cell.querySelector('input[type="radio"]');
@@ -212,7 +213,7 @@
     function previewImage(event) {
         const file = event.target.files[0];
         const reader = new FileReader();
-        reader.onload = function(e) {
+        reader.onload = e => {
             const output = document.getElementById('image-preview');
             output.src = e.target.result;
             output.classList.remove('hidden');
@@ -221,9 +222,33 @@
         if (file) reader.readAsDataURL(file);
     }
 
+    // FUNGSI KOMPRESI FOTO
+    async function compressImage(file) {
+        return new Promise((resolve) => {
+            const reader = new FileReader();
+            reader.readAsDataURL(file);
+            reader.onload = event => {
+                const img = new Image();
+                img.src = event.target.result;
+                img.onload = () => {
+                    const canvas = document.createElement('canvas');
+                    const MAX_WIDTH = 800;
+                    let width = img.width, height = img.height;
+                    if (width > MAX_WIDTH) { height *= MAX_WIDTH / width; width = MAX_WIDTH; }
+                    canvas.width = width; canvas.height = height;
+                    const ctx = canvas.getContext('2d');
+                    ctx.drawImage(img, 0, 0, width, height);
+                    canvas.toBlob(blob => {
+                        resolve(new File([blob], file.name, { type: 'image/jpeg' }));
+                    }, 'image/jpeg', 0.7);
+                };
+            };
+        });
+    }
+
     async function sendData() {
         const btn = document.getElementById('btn-kirim');
-        const file = document.getElementById('camera-input').files[0] || document.getElementById('file-input').files[0];
+        const fileInput = document.getElementById('camera-input').files[0] || document.getElementById('file-input').files[0];
 
         const selectValue = document.getElementById('komoditas-select').value;
         const komoditasFinal = (selectValue === "Lainnya") ? document.getElementById('komoditas-lainnya').value : selectValue;
@@ -234,23 +259,24 @@
         }
         const perkembanganFinal = `Produsen:${getVal('p_prod')}, Dist:${getVal('p_dist')}, Konsumen:${getVal('p_kons')}`;
 
-        if (!document.getElementById('nama').value || !file || !komoditasFinal) {
-            alert('Mohon.. Nama, Komoditas, dan Foto wajib diisi ya!');
+        if (!document.getElementById('petugas').value || !fileInput || !komoditasFinal) {
+            alert('Waduh Pak, Nama, Komoditas, dan Foto wajib diisi ya!');
             return;
         }
 
         btn.disabled = true;
-        btn.innerHTML = "⏳ SEDANG MENGIRIM...";
+        btn.innerHTML = "⏳ MENGECILKAN FOTO...";
 
         try {
-            // 1. Upload ke ImgBB
+            const compressedFile = await compressImage(fileInput);
+            btn.innerHTML = "⏳ SEDANG MENGIRIM...";
+
             const formData = new FormData();
-            formData.append('image', file);
+            formData.append('image', compressedFile);
             const imgRes = await fetch(`https://api.imgbb.com/1/upload?key=da686e0dd69fe24a739317f961163f1e`, { method: 'POST', body: formData });
             const imgData = await imgRes.json();
             const photoUrl = imgData.data.url;
 
-            // 2. Kirim ke Google Apps Script Bapak
             const APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbyYvP832S_mU01PY7klohIuCGEXhMl8Ej_LWDcrVSilVAyM5-_Y-2PQeA9vSkjOISgE/exec'; 
 
             await fetch(APPS_SCRIPT_URL, {
@@ -260,7 +286,7 @@
                 body: JSON.stringify({
                     data: [{
                         'waktu': new Date().toLocaleString('id-ID'),
-                        'nama': document.getElementById('nama').value,
+                        'nama': document.getElementById('petugas').value,
                         'kegiatan': document.getElementById('kegiatan').value,
                         'komoditas': komoditasFinal,
                         'responden': document.getElementById('responden').value,
@@ -270,23 +296,21 @@
                         'pasokan': document.getElementById('pasokan').value,
                         'wilayah': document.getElementById('wilayah').value,
                         'fenomena': "Ket: " + document.getElementById('penjelasan').value,
-                        'foto': photoUrl,
-                        'lokasi': userCoords
+                        'foto': photoUrl
                     }]
                 })
             });
 
-            alert("✅ DATA BERHASIL DIKIRIM KE GOOGLE SHEETS!");
+            alert("✅ BERHASIL! Data terkirim sangat cepat.");
             location.reload(); 
 
         } catch (e) {
             alert("Gagal: " + e.message);
         } finally {
             btn.disabled = false;
-            btn.innerHTML = "🚀 Kirim ke Database";
+            btn.innerHTML = "🚀 Kirim Data";
         }
     }
     </script>
 </body>
 </html>
-
